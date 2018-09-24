@@ -1,4 +1,2 @@
 export const CHOOSE_DATE = 'CHOOSE_DATE';
-export const NEXT_DAY = 'NEXT_DAY';
-export const PREVIOUS_DAY = 'PREVIOUS_DAY';
 export const CHOOSE_DATE_FULFILLED = 'CHOOSE_DATE_FULFILLED';

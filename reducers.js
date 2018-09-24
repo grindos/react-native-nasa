@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { CHOOSE_DATE, CHOOSE_DATE_FULFILLED, NEXT_DAY, PREVIOUS_DAY } from './constants';
+import { CHOOSE_DATE, CHOOSE_DATE_FULFILLED } from './constants';
 
 const defaultState = {
   queriesLeft: 0,
@@ -11,32 +11,20 @@ const defaultState = {
 
 const reducer = (state = defaultState, action) => {
   switch (action.type) {
-    case CHOOSE_DATE_FULFILLED:
-      const { date, title, url, explanation } = action.payload.data;
-      console.log(date);
+    case CHOOSE_DATE:
+      const { date } = action.payload.data;
       return {
         ...state,
         date: moment(date, 'YYYY-MM-DD'),
+      };
+    case CHOOSE_DATE_FULFILLED:
+      const { title, url, explanation } = action.payload.data;
+      return {
+        ...state,
         name: title,
         image: url,
         description: explanation,
-        queriesLeft: action.payload.headers['x-ratelimit-remaining'],
-      };
-    case NEXT_DAY:
-      return {
-        ...state,
-        date: moment(state.date).add(1, 'days'),
-        description: 'next',
-        name: 'next',
-        picture: 'next',
-      };
-    case PREVIOUS_DAY:
-      return {
-        ...state,
-        date: moment(state.date).subtract(1, 'days'),
-        description: 'prev',
-        name: 'prev',
-        picture: 'prev',
+        queriesLeft: +action.payload.headers['x-ratelimit-remaining'],
       };
     default:
       return state;

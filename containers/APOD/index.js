@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
@@ -6,7 +7,7 @@ import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
 import { selectDate, selectDescription, selectImage, selectName, selectQueriesLeft } from '../../selectors';
 
-import { chooseDate, nextDay, previousDay } from '../../actions';
+import chooseDate from '../../actions';
 
 const styles = StyleSheet.create({
   container: {
@@ -27,89 +28,77 @@ const styles = StyleSheet.create({
   },
 });
 
-class APOD extends Component {
-  constructor() {
-    super();
-    console.log();
-  }
-
-  render() {
-    const {
-      date,
-      onNextDay,
-      onPreviousDay,
-      onChooseDate,
-      image,
-      description,
-      name,
-      queriesLeft,
-    } = this.props;
-
-    return (
-      <View style={styles.container}>
-        <Text style={styles.counter}>
-          {`${queriesLeft} left`}
-        </Text>
-        <View style={styles.dateChooser}>
+const APOD = ({ date, onChooseDate, image, description, name, queriesLeft }) => (
+  <View style={styles.container}>
+    <Text style={styles.counter}>
+      {`${queriesLeft} left`}
+    </Text>
+    <View style={styles.dateChooser}>
+      <Button
+        onPress={() => {
+          onChooseDate(date.subtract(1, 'days').format('YYYY-MM-DD'));
+        }}
+        title="Previous day"
+        style={styles.button}
+      />
+      <DatePicker
+        style={{ width: 200 }}
+        date={date.format('YYYY-MM-DD')}
+        mode="date"
+        placeholder="select date"
+        format="YYYY-MM-DD"
+        minDate="1995-06-16"
+        maxDate={moment().format('YYYY-MM-DD')}
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        customStyles={{
+          dateIcon: {
+            position: 'absolute',
+            left: 0,
+            top: 4,
+            marginLeft: 0,
+          },
+          dateInput: {
+            marginLeft: 36,
+          },
+        }}
+        onDateChange={onChooseDate}
+      />
+      {(moment().isSameOrBefore(date, 'day'))
+        ? null
+        : (
           <Button
             onPress={() => {
-              onChooseDate(date.subtract(1, 'days').format('YYYY-MM-DD'));
+              onChooseDate(date.add(1, 'days').format('YYYY-MM-DD'));
             }}
-            title="Previous day"
+            title="Next day"
             style={styles.button}
           />
-          <DatePicker
-            style={{ width: 200 }}
-            date={date.format('YYYY-MM-DD')}
-            mode="date"
-            placeholder="select date"
-            format="YYYY-MM-DD"
-            minDate={moment('1995-06-16', 'YYYY-MM-DD').format('YYYY-MM-DD')}
-            maxDate={moment().format('YYYY-MM-DD')}
-            confirmBtnText="Confirm"
-            cancelBtnText="Cancel"
-            customStyles={{
-              dateIcon: {
-                position: 'absolute',
-                left: 0,
-                top: 4,
-                marginLeft: 0,
-              },
-              dateInput: {
-                marginLeft: 36,
-              },
-            }}
-            onDateChange={onChooseDate}
-          />
-          {(moment().isSameOrBefore(date, 'day'))
-            ? null
-            : (
-              <Button
-                onPress={() => {
-                  onChooseDate(date.add(1, 'days').format('YYYY-MM-DD'));
-                }}
-                title="Next day"
-                style={styles.button}
-              />
-            )
-          }
+        )
+      }
 
-        </View>
+    </View>
 
-        <Text>
-          {name}
-        </Text>
-        <Image
-          style={{ width: 200, height: 200 }}
-          source={{ uri: image }}
-        />
-        <Text>
-          {description}
-        </Text>
-      </View>
-    );
-  }
-}
+    <Text>
+      {name}
+    </Text>
+    <Image
+      style={{ width: 200, height: 200 }}
+      source={{ uri: image }}
+    />
+    <Text>
+      {description}
+    </Text>
+  </View>
+);
+APOD.propTypes = {
+  date: PropTypes.object,
+  onChooseDate: PropTypes.func,
+  image: PropTypes.string,
+  description: PropTypes.string,
+  name: PropTypes.string,
+  queriesLeft: PropTypes.number,
+};
 
 const mapStateToProps = createStructuredSelector({
   date: selectDate,
@@ -121,8 +110,6 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = {
   onChooseDate: chooseDate,
-  onNextDay: nextDay,
-  onPreviousDay: previousDay,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(APOD);
