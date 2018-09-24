@@ -28,26 +28,34 @@ const styles = StyleSheet.create({
   },
 });
 
+const firstAPODDate = '1995-06-16';
+
 const APOD = ({ date, onChooseDate, image, description, name, queriesLeft }) => (
   <View style={styles.container}>
     <Text style={styles.counter}>
       {`${queriesLeft} left`}
     </Text>
     <View style={styles.dateChooser}>
-      <Button
-        onPress={() => {
-          onChooseDate(date.subtract(1, 'days').format('YYYY-MM-DD'));
-        }}
-        title="Previous day"
-        style={styles.button}
-      />
+      {(date.isSameOrBefore(moment(firstAPODDate, 'YYYY-MM-DD'), 'day'))
+        ? null
+        : (
+          <Button
+            onPress={() => {
+              onChooseDate(date.subtract(1, 'days').format('YYYY-MM-DD'));
+            }}
+            title="Previous day"
+            style={styles.button}
+          />
+        )
+      }
+
       <DatePicker
         style={{ width: 200 }}
         date={date.format('YYYY-MM-DD')}
         mode="date"
         placeholder="select date"
         format="YYYY-MM-DD"
-        minDate="1995-06-16"
+        minDate={firstAPODDate}
         maxDate={moment().format('YYYY-MM-DD')}
         confirmBtnText="Confirm"
         cancelBtnText="Cancel"
