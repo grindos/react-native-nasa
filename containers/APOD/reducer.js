@@ -31,6 +31,11 @@ const APODInfo = (state = defaultState, action) => {
     case CHOOSE_DATE_REJECTED:
       return {
         ...state,
+        name: 'No APOD',
+        image: '',
+        description: '',
+        queriesLeft: state.queriesLeft - 1,
+        loading: false,
       };
     default:
       return state;

@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
+    margin: 10,
   },
   datePicker: {
     flex: 1,
