@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CHOOSE_DATE } from './constants';
+import { CHOOSE_DATE } from '../../constants';
 
 const chooseDate = date => ({
   type: CHOOSE_DATE,
