@@ -10,29 +10,39 @@ const styles = StyleSheet.create({
   dateChooser: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 20,
+    justifyContent: 'space-around',
+    backgroundColor: '#f0f0f0',
+    paddingBottom: 10,
+    paddingTop: 10,
   },
-  button: {
-    margin: 10,
+  buttonContainer: {
+    flex: 1,
+  },
+  datePicker: {
+    flex: 1,
   },
 });
 
 const DateChanger = ({ date, onChooseDate }) => (
   <View style={styles.dateChooser}>
-    {(date.isSameOrBefore(moment(firstAPODDate, 'YYYY-MM-DD'), 'day'))
-      ? null
-      : (
-        <Button
-          onPress={() => {
-            onChooseDate(date.subtract(1, 'days').format('YYYY-MM-DD'));
-          }}
-          title="Previous day"
-          style={styles.button}
-        />
-      )
-    }
+    <View style={styles.buttonContainer}>
+      {(date.isSameOrBefore(moment(firstAPODDate, 'YYYY-MM-DD'), 'day'))
+        ? null
+        : (
+          <Button
+            onPress={() => {
+              onChooseDate(date.subtract(1, 'days').format('YYYY-MM-DD'));
+            }}
+            title="Previous day"
+            style={styles.button}
+          />
+        )
+      }
+    </View>
 
     <DatePicker
-      style={{ width: 200 }}
+      style={styles.DatePicker}
       date={date.format('YYYY-MM-DD')}
       mode="date"
       placeholder="select date"
@@ -54,18 +64,20 @@ const DateChanger = ({ date, onChooseDate }) => (
       }}
       onDateChange={onChooseDate}
     />
-    {(moment().isSameOrBefore(date, 'day'))
-      ? <Text />
-      : (
-        <Button
-          onPress={() => {
-            onChooseDate(date.add(1, 'days').format('YYYY-MM-DD'));
-          }}
-          title="Next day"
-          style={styles.button}
-        />
-      )
-    }
+    <View style={styles.buttonContainer}>
+      {(moment().isSameOrBefore(date, 'day'))
+        ? <Text />
+        : (
+          <Button
+            onPress={() => {
+              onChooseDate(date.add(1, 'days').format('YYYY-MM-DD'));
+            }}
+            title="Next day"
+            style={styles.button}
+          />
+        )
+      }
+    </View>
 
   </View>
 );

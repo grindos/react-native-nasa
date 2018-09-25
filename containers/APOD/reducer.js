@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { CHOOSE_DATE_PENDING, CHOOSE_DATE_FULFILLED } from '../../constants';
+import { CHOOSE_DATE_REJECTED, CHOOSE_DATE_PENDING, CHOOSE_DATE_FULFILLED } from '../../constants';
 
 const defaultState = {
   queriesLeft: 0,
@@ -27,6 +27,10 @@ const APODInfo = (state = defaultState, action) => {
         description: explanation,
         queriesLeft: +action.payload.headers['x-ratelimit-remaining'],
         loading: false,
+      };
+    case CHOOSE_DATE_REJECTED:
+      return {
+        ...state,
       };
     default:
       return state;
